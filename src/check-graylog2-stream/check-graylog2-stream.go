@@ -9,7 +9,6 @@ import (
   "net/http"
   "net/url"
   "crypto/tls"
-  "strings"
   "github.com/fractalcat/nagiosplugin"
 )
 
@@ -22,7 +21,7 @@ var pass      *string
 func init() {
   condition = flag.String("condition", "<ID>", "Condition ID, set only to check a single alert (optional)")
   stream    = flag.String("stream",    "<ID>", "Stream ID (mandatory)")
-  api_url   = flag.String("url",       "http://localhost:12900", "URL to Graylog2 api (optional)")
+  api_url   = flag.String("url",       "http://localhost:9000/api", "URL to Graylog2 api (optional)")
   user      = flag.String("user",      "<username>", "API username (mandatory)")
   pass      = flag.String("password",  "<password>", "API password (mandatory)")
 }
@@ -73,10 +72,6 @@ func parseUrl(unparsed_url string) string {
   parsed_url, err := url.Parse(unparsed_url)
   if err != nil {
     nagiosplugin.Exit(nagiosplugin.UNKNOWN, "Can not parse given URL")
-  }
-
-  if !strings.Contains(parsed_url.Host, ":") {
-    nagiosplugin.Exit(nagiosplugin.UNKNOWN, "Please give the API port number in the form http://hostname:port")
   }
 
   connection_string := parsed_url.Scheme + "://" + parsed_url.Host + parsed_url.Path
